@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Galerie de photos</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+
+    <script>
+        // Source de données
+        var imageList = [
+            "img_1.jpg",
+            "img_2.jpg",
+            "img_3.jpg",
+            "img_4.jpg",
+            "img_5.jpg",
+        ];
+
+        // Position de l'image en cours
+        var currentImagePosition = 0;
+
+
+        function displayImage($imageElement, pos) {
+
+            // Modification de la propriété src de l'image
+            $imageElement.attr("src", "photos/" + imageList[pos]);
+            var positionText = `image ${currentImagePosition + 1} sur ${imageList.length}`;
+            $positionDiv.text(positionText);
+        }
+
+        $(document).ready(function () {
+            // Ciblage des éléments
+            $nextButton = $("#nextButton");
+            $prevButton = $("#prevButton");
+            $image = $("#photo");
+            $positionDiv = $("#position");
+            $info = $("#info");
+
+            // Fonction du bouton suivant
+            $nextButton.click(function () {
+                if (currentImagePosition >= imageList.length - 1) {
+                    currentImagePosition = 0;
+                } else {
+                    currentImagePosition++;
+                }
+
+                displayImage($image, currentImagePosition);
+            });
+
+            // Fonction du bouton précédent
+            $prevButton.click(function () {
+                if (currentImagePosition == 0) {
+                    currentImagePosition = imageList.length - 1;
+                } else {
+                    currentImagePosition--;
+                }
+
+                displayImage($image, currentImagePosition);
+            });
+
+            // Changement de propriété CSS au passage de la souris sur l'image
+            $image.mouseover(function (event) {
+                $(this).css("opacity", ".5");
+                $info.show();
+                $info.css({
+                    "top": event.screenY + "px",
+                    "left": event.screenX + "px"
+                });
+            });
+
+            $image.mouseout(function () {
+                $(this).css("opacity", "1");
+                $info.hide();
+            });
+
+            $image.mousemove(function () {
+                $info.css({
+                    "top": event.screenY + "px",
+                    "left": event.screenX + "px"
+                });
+            });
+
+
+            // Affichage de l'image au chargement
+            displayImage($image, currentImagePosition);
+            // Masquage de la zone info au chargement
+            $info.hide();
+        });
+
+
+
+    </script>
+
+
+    <style>
+        #info {
+            background-color: rgba(233, 233, 233, 0.486);
+            text-align: center;
+            padding: 20px;
+            width: 200px;
+            border-radius: 15px;
+            box-shadow: 3px 3px 3px black;
+            position: absolute;
+        }
+    </style>
+
+</head>
+
+
+<body>
+    <div id="info">Hello</div>
+    <button type="button" id="nextButton">&gt;&gt;</button>
+    <div id="position"></div>
+    <button type="button" id="prevButton">&lt;&lt;</button>
+    <div>
+        <img id="photo">
+    </div>
+</body>
+
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Convertisseur de devises</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-grid.min.css">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        // URL du service récupérant le taux de change 
+        const API_URL = "https://api.ratesapi.io/api/latest?";
+
+        // Devise d'entrée
+        var baseCurrency = "EUR";
+
+        $(document).ready(function () {
+            // Définition  des cibles
+            $form = $("form");
+            $input = $("#euroAmount");
+            $output = $("#results");
+            $currencyChoice = $("#currencyChoice");
+
+
+            function convertCurrency(event) {
+                event.preventDefault();
+
+                // Récupération des données
+                var euro = $input.val();
+                var currencyCode = $currencyChoice.val();
+
+                // Conversion si les données sont valides
+                if (euro > 0 && currencyCode != "") {
+                    var requestUrl = API_URL + "base=" + baseCurrency + "&symbols=" + currencyCode;
+                    var output = "";
+                    $.get(requestUrl)
+                        .done(function (data) {
+                            var rate = data.rates[currencyCode];
+                            output = euro * rate;
+                        })
+                        .fail(function (err) {
+                            console.log(err);
+                            output = "Impossible de convertir cette devise";
+                        })
+                        .always(function () {
+                            $output.text(output);
+                        });
+                }
+            }
+            $form.submit(convertCurrency);
+
+            // Conversion automatique lorsque la devise est changée dans la liste déroulante 
+            $currencyChoice.change(convertCurrency);
+
+            // Conversion automatique lorsque la touche du clavier est relevée
+            // $input.keyup(convertCurrency);
+        });
+
+    </script>
+
+</head>
+
+<body class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-4">
+            <form method="POST">
+
+                <div class="form-group">
+                    <input type="number" id="euroAmount" placeholder="Montant en euro" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <select id="currencyChoice" class="form-control">
+                        <option value="">Choisissez une devise</option>
+                        <option value="USD">Dollars américains</option>
+                        <option value="CAD">Dollars canadiens</option>
+                        <option value="JPY">Yens japonais</option>
+                        <option value="CNY">Yuans chinois</option>
+                    </select>
+
+                </div>
+
+                <button type="submit">Convertir</button>
+
+
+            </form>
+
+            <div id="results"></div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

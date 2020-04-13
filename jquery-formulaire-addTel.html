@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Formulaire dynamique</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script>
+
+
+        /****************************************************
+        * Fonction d'ajout d'un téléphone dans le formulaire*
+        ****************************************************/
+
+
+        function addTel($container) {
+            // Création du li
+            var $item = $("<li class=\"form-group mt-2 row\"></li>");
+            // Création de l'input
+            var $input = $("<input>").attr({
+                "type": "tel",
+                "name": "telephones[]",
+                "class": "form-control"
+            });
+
+            // Création d'un conteneur pour l'input
+            var $inputContainer = $("<div class=\"col-9\"></div>");
+
+            // Ajout de l'input au conteneur
+            $inputContainer.append($input);
+
+            // Création du bouton
+            var $button = $("<button></button").attr({
+                "type": "button",
+                "class": "btn btn-danger delete"
+            }).text("suppr");
+
+            var $buttonContainer = $("<div class=\"col-3\"></div>");
+            $buttonContainer.append($button);
+
+            // Ajout de l'input conteneur au li
+            $item.append($inputContainer);
+
+            // Ajout du bouton au li
+            $item.append($buttonContainer);
+
+            // Ajout du li au container
+            $container.append($item);
+        }
+
+
+
+        $(document).ready(function () {
+
+            var $telContainer = $("#telGroup");
+            var $btAddTel = $("#btAddTel");
+
+            $btAddTel.click(function () {
+                addTel($telContainer);
+            });
+
+            $telContainer.delegate(".delete", "click", function () {
+                $(this).parent().parent().remove();
+            });
+        });
+
+
+    </script>
+</head>
+
+
+
+<body class="container-fluid">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 p-3">
+            <h1>Formulaire</h1>
+
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="personName" class="form-control">
+                </div>
+
+                <div class="row">
+                    <h3 class="col-md-7">Téléphone</h3>
+                    <button type="button" class="btn btn-primary col-md-5" id="btAddTel">Ajouter un téléphone</button>
+                </div>
+
+                <ul class="list-group" id="telGroup">
+                </ul>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
